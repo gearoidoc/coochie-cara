@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['apple-touch-icon.png', 'icon.svg'],
       manifest: {
         name: 'Coochie Cara',
         short_name: 'Cara',
@@ -21,17 +21,19 @@ export default defineConfig({
         start_url: '/coochie-cara/',
         icons: [
           {
-            src: 'icon-192.png',
+            src: 'pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
+            purpose: 'any',
           },
           {
-            src: 'icon-512.png',
+            src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
+            purpose: 'any',
           },
           {
-            src: 'icon-512-maskable.png',
+            src: 'pwa-maskable-512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
