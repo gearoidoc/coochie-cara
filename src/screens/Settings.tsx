@@ -14,7 +14,6 @@ export default function Settings() {
 
   const enabledOptional: SymptomId[] = config?.enabledOptional ?? [];
   const enabledSet = new Set(enabledOptional);
-  const atCap = enabledOptional.length >= 4;
 
   const enabledSymptoms = enabledOptional
     .map((id) => optionals.find((s) => s.id === id))
@@ -38,11 +37,13 @@ export default function Settings() {
 
       <p className="text-ink/70 font-semibold text-sm mb-2">Symptoms</p>
       <p className="text-ink/60 text-sm mb-4">
-        Choose up to 4 extra symptoms to track alongside the defaults.
+        Choose extra symptoms to track alongside the defaults.
       </p>
-      <span className="text-coralDark bg-coral/10 rounded-full px-3 py-1 text-xs font-semibold inline-block mb-4">
-        {enabledOptional.length} of 4 selected
-      </span>
+      {enabledOptional.length > 0 && (
+        <span className="text-coralDark bg-coral/10 rounded-full px-3 py-1 text-xs font-semibold inline-block mb-4">
+          {enabledOptional.length} added
+        </span>
+      )}
 
       <p className="text-ink/50 text-xs font-semibold uppercase tracking-wide mb-2 mt-4">
         In your grid
@@ -71,7 +72,7 @@ export default function Settings() {
               <SymptomConfigRow
                 key={symptom.id}
                 symptom={symptom}
-                mode={atCap ? 'available-disabled' : 'available'}
+                mode="available"
                 onAction={() => handleAdd(symptom.id as SymptomId)}
               />
             ))}
