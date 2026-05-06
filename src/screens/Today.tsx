@@ -4,6 +4,7 @@ import { db, upsertDay, getDefaultSymptoms } from '../db';
 import PeriodButton from '../components/PeriodButton';
 import FlowChips from '../components/FlowChips';
 import SymptomTile from '../components/SymptomTile';
+import NoteField from '../components/NoteField';
 import type { FlowLevel, Severity, SymptomId } from '../types';
 
 const DEFAULT_SYMPTOMS = getDefaultSymptoms();
@@ -64,6 +65,16 @@ export default function Today() {
     return entry?.symptoms.find((s) => s.id === id)?.severity ?? null;
   }
 
+  function handleNoteSave(note: string | undefined) {
+    upsertDay({
+      date: todayStr,
+      onPeriod: entry?.onPeriod ?? false,
+      flow: entry?.flow,
+      symptoms: entry?.symptoms ?? [],
+      note,
+    }).catch((e) => console.error('Failed to persist note', e));
+  }
+
   const dateDisplay = format(new Date(), 'EEE d MMM');
 
   return (
@@ -100,6 +111,9 @@ export default function Today() {
             />
           ))}
         </div>
+      </div>
+      <div className="mt-8">
+        <NoteField persistedNote={entry?.note} onSave={handleNoteSave} />
       </div>
     </div>
   );
