@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { addDays, format, parseISO, subDays } from 'date-fns';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, upsertDay, getDefaultSymptoms, getSymptomById } from '../db';
@@ -124,7 +125,15 @@ export default function Today() {
           </div>
 
           <div className="mt-8">
-            <p className="text-ink/70 font-semibold text-sm mb-3">How are you feeling?</p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-ink/70 font-semibold text-sm">How are you feeling?</p>
+              <Link
+                to="/settings"
+                className="text-coralDark text-sm font-semibold active:scale-95 transition-all flex items-center gap-1"
+              >
+                Customize ›
+              </Link>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               {[
                 ...getDefaultSymptoms(),

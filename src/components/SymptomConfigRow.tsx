@@ -2,7 +2,7 @@ import type { SymptomCatalogEntry } from '../db';
 
 interface Props {
   symptom: SymptomCatalogEntry;
-  mode: 'default' | 'enabled' | 'available' | 'available-disabled';
+  mode: 'default' | 'enabled' | 'available';
   onAction?: () => void;
 }
 
@@ -22,12 +22,10 @@ export default function SymptomConfigRow({ symptom, mode, onAction }: Props) {
           −
         </button>
       )}
-      {(mode === 'available' || mode === 'available-disabled') && (
+      {mode === 'available' && (
         <button
           onClick={onAction}
-          className={`w-7 h-7 rounded-full bg-coral text-white flex items-center justify-center active:scale-95 transition-all ${
-            mode === 'available-disabled' ? 'opacity-30 pointer-events-none' : ''
-          }`}
+          className="w-7 h-7 rounded-full bg-coral text-white flex items-center justify-center active:scale-95 transition-all"
         >
           +
         </button>
