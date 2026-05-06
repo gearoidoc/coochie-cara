@@ -1,13 +1,13 @@
 import type { SymptomId } from '../types';
 
-interface SymptomMeta {
+export interface SymptomCatalogEntry {
   id: SymptomId;
   label: string;
   emoji: string;
   isDefault: boolean;
 }
 
-export const SYMPTOM_CATALOG: SymptomMeta[] = [
+export const SYMPTOM_CATALOG: SymptomCatalogEntry[] = [
   { id: 'cramps',            label: 'Cramps',            emoji: '🌀', isDefault: true },
   { id: 'headache',          label: 'Headache',          emoji: '🤕', isDefault: true },
   { id: 'nausea',            label: 'Nausea',            emoji: '🤢', isDefault: true },
@@ -24,14 +24,14 @@ export const SYMPTOM_CATALOG: SymptomMeta[] = [
   { id: 'libido',            label: 'Libido',            emoji: '✨', isDefault: false },
 ];
 
-export function getDefaultSymptoms(): SymptomMeta[] {
+export function getDefaultSymptoms(): SymptomCatalogEntry[] {
   return SYMPTOM_CATALOG.filter((s) => s.isDefault);
 }
 
-export function getOptionalSymptoms(): SymptomMeta[] {
+export function getOptionalSymptoms(): SymptomCatalogEntry[] {
   return SYMPTOM_CATALOG.filter((s) => !s.isDefault);
 }
 
-export function getSymptomById(id: SymptomId): SymptomMeta | undefined {
+export function getSymptomById(id: SymptomId): SymptomCatalogEntry | undefined {
   return SYMPTOM_CATALOG.find((s) => s.id === id);
 }
