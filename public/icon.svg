@@ -1,0 +1,36 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="cc-bg" cx="50%" cy="38%" r="75%">
+      <stop offset="0%" stop-color="#FF8A8A"></stop>
+      <stop offset="55%" stop-color="#FF6B6B"></stop>
+      <stop offset="100%" stop-color="#E85A5A"></stop>
+    </radialGradient>
+    <clipPath id="cc-squircle">
+      
+      <path d="M512 0&#xA;               C 815 0 1024 209 1024 512&#xA;               C 1024 815 815 1024 512 1024&#xA;               C 209 1024 0 815 0 512&#xA;               C 0 209 209 0 512 0 Z"></path>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#cc-squircle)">
+    
+    <rect width="1024" height="1024" fill="url(#cc-bg)"></rect>
+
+    
+    <circle cx="512" cy="512" r="360" fill="#FFF8F0" opacity="0.10"></circle>
+
+    
+    <g transform="translate(512 512)">
+      <g fill="#FFF8F0">
+        <ellipse cx="0" cy="-200" rx="135" ry="195"></ellipse>
+        <ellipse cx="0" cy="-200" rx="135" ry="195" transform="rotate(72)"></ellipse>
+        <ellipse cx="0" cy="-200" rx="135" ry="195" transform="rotate(144)"></ellipse>
+        <ellipse cx="0" cy="-200" rx="135" ry="195" transform="rotate(216)"></ellipse>
+        <ellipse cx="0" cy="-200" rx="135" ry="195" transform="rotate(288)"></ellipse>
+      </g>
+      
+      <circle r="92" fill="#F4D35E"></circle>
+      <circle r="92" cx="-18" cy="-22" fill="#FBE38B" opacity="0.55"></circle>
+    </g>
+  </g>
+</svg>
