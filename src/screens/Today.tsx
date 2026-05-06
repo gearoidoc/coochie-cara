@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { addDays, format, parseISO, subDays } from 'date-fns';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, upsertDay, getDefaultSymptoms } from '../db';
+import { db, upsertDay, getDefaultSymptoms, getSymptomById } from '../db';
 import DateHeader from '../components/DateHeader';
 import PeriodButton from '../components/PeriodButton';
 import FlowChips from '../components/FlowChips';
@@ -9,13 +9,12 @@ import SymptomTile from '../components/SymptomTile';
 import NoteField from '../components/NoteField';
 import type { FlowLevel, Severity, SymptomId } from '../types';
 
-const DEFAULT_SYMPTOMS = getDefaultSymptoms();
-
 export default function Today() {
   const [viewedDate, setViewedDate] = useState(() => format(new Date(), 'yyyy-MM-dd'));
   const noteFlushRef = useRef<(() => void) | null>(null);
 
   const entry = useLiveQuery(() => db.days.get(viewedDate), [viewedDate], null);
+  const symptomConfig = useLiveQuery(() => db.symptomConfig.get('singleton'));
 
   // null = DB query in flight; show header but hide form to avoid flicker
   const isLoading = entry === null;
@@ -127,7 +126,12 @@ export default function Today() {
           <div className="mt-8">
             <p className="text-ink/70 font-semibold text-sm mb-3">How are you feeling?</p>
             <div className="grid grid-cols-2 gap-3">
-              {DEFAULT_SYMPTOMS.map((symptom) => (
+              {[
+                ...getDefaultSymptoms(),
+                ...(symptomConfig?.enabledOptional ?? [])
+                  .map((id) => getSymptomById(id))
+                  .filter((s): s is NonNullable<typeof s> => s !== undefined),
+              ].map((symptom) => (
                 <SymptomTile
                   key={symptom.id}
                   symptom={symptom}
