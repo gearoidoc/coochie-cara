@@ -1,9 +1,12 @@
 import { format } from 'date-fns';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, upsertDay } from '../db';
+import { db, upsertDay, getDefaultSymptoms } from '../db';
 import PeriodButton from '../components/PeriodButton';
 import FlowChips from '../components/FlowChips';
-import type { FlowLevel } from '../types';
+import SymptomTile from '../components/SymptomTile';
+import type { FlowLevel, Severity, SymptomId } from '../types';
+
+const DEFAULT_SYMPTOMS = getDefaultSymptoms();
 
 const todayStr = format(new Date(), 'yyyy-MM-dd');
 
@@ -37,6 +40,30 @@ export default function Today() {
     }).catch((e) => console.error('Failed to persist flow selection', e));
   }
 
+  function handleSymptomTap(id: SymptomId) {
+    navigator.vibrate?.(10);
+    const current = entry?.symptoms ?? [];
+    const existing = current.find((s) => s.id === id);
+    const CYCLE: Array<Severity | null> = [null, 'mild', 'moderate', 'severe'];
+    const nextSeverity = CYCLE[(CYCLE.indexOf(existing?.severity ?? null) + 1) % CYCLE.length];
+    const updated = nextSeverity === null
+      ? current.filter((s) => s.id !== id)
+      : existing
+        ? current.map((s) => s.id === id ? { ...s, severity: nextSeverity } : s)
+        : [...current, { id, severity: nextSeverity }];
+    upsertDay({
+      date: todayStr,
+      onPeriod: entry?.onPeriod ?? false,
+      flow: entry?.flow,
+      symptoms: updated,
+      note: entry?.note,
+    }).catch((e) => console.error('Failed to persist symptom tap', e));
+  }
+
+  function getSeverity(id: SymptomId): Severity | null {
+    return entry?.symptoms.find((s) => s.id === id)?.severity ?? null;
+  }
+
   const dateDisplay = format(new Date(), 'EEE d MMM');
 
   return (
@@ -59,6 +86,20 @@ export default function Today() {
         }`}
       >
         <FlowChips flow={flow} onSelect={handleFlowSelect} />
+      </div>
+
+      <div className="mt-8">
+        <p className="text-ink/70 font-semibold text-sm mb-3">How are you feeling?</p>
+        <div className="grid grid-cols-2 gap-3">
+          {DEFAULT_SYMPTOMS.map((symptom) => (
+            <SymptomTile
+              key={symptom.id}
+              symptom={symptom}
+              severity={getSeverity(symptom.id as SymptomId)}
+              onTap={() => handleSymptomTap(symptom.id as SymptomId)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
