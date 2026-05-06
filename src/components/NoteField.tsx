@@ -3,9 +3,10 @@ import { useEffect, useRef, useState } from 'react';
 interface Props {
   persistedNote: string | undefined;
   onSave: (note: string | undefined) => void;
+  flushRef?: React.MutableRefObject<(() => void) | null>;
 }
 
-export default function NoteField({ persistedNote, onSave }: Props) {
+export default function NoteField({ persistedNote, onSave, flushRef }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [text, setText] = useState('');
   const onSaveRef = useRef(onSave);
@@ -13,6 +14,16 @@ export default function NoteField({ persistedNote, onSave }: Props) {
 
   useEffect(() => {
     onSaveRef.current = onSave;
+  });
+
+  // Keep flushRef current after every render so it captures latest text
+  useEffect(() => {
+    if (!flushRef) return;
+    flushRef.current = () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      onSaveRef.current(text.trim() || undefined);
+      setExpanded(false);
+    };
   });
 
   useEffect(() => {
