@@ -22,7 +22,7 @@ export default function FlowChips({ flow, onSelect }: Props) {
           <button
             key={value}
             onClick={() => onSelect(value)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition-all active:scale-[0.97] ${
+            className={`rounded-full px-3 py-2.5 text-xs font-semibold transition-all active:scale-[0.97] ${
               flow === value ? 'bg-coral text-white' : 'bg-coral/10 text-coral'
             }`}
           >
