@@ -36,3 +36,14 @@ export interface SymptomConfig {
   id: 'singleton';
   enabledOptional: SymptomId[]; // max 4, from optional pool only
 }
+
+export type BirthControlType = 'pill' | 'implant' | 'iud_hormonal' | 'iud_copper';
+
+export interface BirthControlEntry {
+  id?: number;
+  type: BirthControlType;
+  startDate: string; // YYYY-MM-DD
+  endDate?: string;  // YYYY-MM-DD, undefined = currently using
+  notes?: string;
+  updatedAt: number;
+}

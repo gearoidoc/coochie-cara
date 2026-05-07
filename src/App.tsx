@@ -3,12 +3,13 @@ import Today from './screens/Today'
 import Calendar from './screens/Calendar'
 import Insights from './screens/Insights'
 import Settings from './screens/Settings'
+import BirthControl from './screens/BirthControl'
 
 const tabs = [
   { to: '/', label: 'Today', icon: '🌸' },
   { to: '/calendar', label: 'Calendar', icon: '📅' },
   { to: '/insights', label: 'Insights', icon: '📊' },
-  { to: '/settings', label: 'Settings', icon: '⚙️' },
+  { to: '/birth-control', label: 'BC', icon: '💊' },
 ]
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/insights" element={<Insights />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/birth-control" element={<BirthControl />} />
         </Routes>
       </main>
 
