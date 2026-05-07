@@ -1,7 +1,6 @@
 import type { FlowLevel } from '../types';
 
 const FLOW_LEVELS: { value: FlowLevel; label: string }[] = [
-  { value: 'none', label: 'None' },
   { value: 'spotting', label: 'Spotting' },
   { value: 'light', label: 'Light' },
   { value: 'medium', label: 'Medium' },
