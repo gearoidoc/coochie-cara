@@ -18,6 +18,7 @@ const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 export default function Calendar() {
   const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()))
+  const [fadeIn, setFadeIn] = useState(true)
 
   const gridStart = startOfWeek(currentMonth, { weekStartsOn: 1 })
   const gridDays = eachDayOfInterval({ start: gridStart, end: addDays(gridStart, 41) })
@@ -39,11 +40,21 @@ export default function Calendar() {
     return map
   }, [dayEntries])
 
+  function navigateMonth(newMonth: Date) {
+    setFadeIn(false)
+    setTimeout(() => {
+      setCurrentMonth(newMonth)
+      setFadeIn(true)
+    }, 150)
+  }
+
+  const onCurrentMonth = isSameMonth(currentMonth, new Date())
+
   return (
     <div className="flex flex-col min-h-screen bg-cream p-6">
       <div className="flex items-center justify-between mb-6">
         <button
-          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+          onClick={() => navigateMonth(subMonths(currentMonth, 1))}
           className="w-10 h-10 flex items-center justify-center rounded-full bg-ink/5 text-ink text-lg active:scale-95 transition-all"
         >
           ←
@@ -51,12 +62,22 @@ export default function Calendar() {
         <h1 className="text-xl font-bold text-ink">
           {format(currentMonth, 'MMMM yyyy')}
         </h1>
-        <button
-          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-ink/5 text-ink text-lg active:scale-95 transition-all"
-        >
-          →
-        </button>
+        <div className="flex items-center gap-1">
+          {!onCurrentMonth && (
+            <button
+              onClick={() => navigateMonth(startOfMonth(new Date()))}
+              className="text-xs font-semibold text-coral px-2 py-1 rounded-lg active:scale-95 transition-all"
+            >
+              Today
+            </button>
+          )}
+          <button
+            onClick={() => navigateMonth(addMonths(currentMonth, 1))}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-ink/5 text-ink text-lg active:scale-95 transition-all"
+          >
+            →
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-7 mb-1">
@@ -67,7 +88,9 @@ export default function Calendar() {
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-y-1">
+      <div
+        className={`grid grid-cols-7 gap-y-1 transition-opacity duration-150 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}
+      >
         {gridDays.map(day => (
           <DayCell
             key={day.toISOString()}
@@ -76,7 +99,6 @@ export default function Calendar() {
             isCurrentMonth={isSameMonth(day, currentMonth)}
           />
         ))}
-
       </div>
     </div>
   )
