@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import MonthPicker from '../components/MonthPicker'
 import {
   format,
   startOfMonth,
@@ -19,6 +20,7 @@ const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 export default function Calendar() {
   const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()))
   const [fadeIn, setFadeIn] = useState(true)
+  const [isPickerOpen, setIsPickerOpen] = useState(false)
 
   const gridStart = startOfWeek(currentMonth, { weekStartsOn: 1 })
   const gridDays = eachDayOfInterval({ start: gridStart, end: addDays(gridStart, 41) })
@@ -51,6 +53,7 @@ export default function Calendar() {
   const onCurrentMonth = isSameMonth(currentMonth, new Date())
 
   return (
+    <>
     <div className="flex flex-col min-h-screen bg-cream p-6">
       <div className="flex items-center justify-between mb-6">
         <button
@@ -59,9 +62,13 @@ export default function Calendar() {
         >
           ←
         </button>
-        <h1 className="text-xl font-bold text-ink">
+        <button
+          onClick={() => setIsPickerOpen(true)}
+          className="flex items-center gap-1 text-xl font-bold text-ink active:scale-95 transition-all"
+        >
           {format(currentMonth, 'MMMM yyyy')}
-        </h1>
+          <span className="text-base leading-none">▾</span>
+        </button>
         <div className="flex items-center gap-1">
           {!onCurrentMonth && (
             <button
@@ -101,5 +108,13 @@ export default function Calendar() {
         ))}
       </div>
     </div>
+
+    <MonthPicker
+      isOpen={isPickerOpen}
+      currentMonth={currentMonth}
+      onSelect={(date) => navigateMonth(date)}
+      onClose={() => setIsPickerOpen(false)}
+    />
+    </>
   )
 }
