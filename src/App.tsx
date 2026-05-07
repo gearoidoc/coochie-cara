@@ -3,27 +3,29 @@ import Today from './screens/Today'
 import Calendar from './screens/Calendar'
 import Insights from './screens/Insights'
 import Settings from './screens/Settings'
+import BirthControl from './screens/BirthControl'
 
 const tabs = [
   { to: '/', label: 'Today', icon: '🌸' },
   { to: '/calendar', label: 'Calendar', icon: '📅' },
   { to: '/insights', label: 'Insights', icon: '📊' },
-  { to: '/settings', label: 'Settings', icon: '⚙️' },
+  { to: '/birth-control', label: 'BC', icon: '💊' },
 ]
 
 export default function App() {
   return (
     <div className="flex flex-col h-full max-w-md mx-auto bg-cream relative">
-      <main className="flex-1 overflow-y-auto pb-16">
+      <main className="flex-1 overflow-y-auto pb-[calc(4rem+env(safe-area-inset-bottom))]" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <Routes>
           <Route path="/" element={<Today />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/insights" element={<Insights />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/birth-control" element={<BirthControl />} />
         </Routes>
       </main>
 
-      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-100 flex">
+      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-100 flex" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {tabs.map(({ to, label, icon }) => (
           <NavLink
             key={to}

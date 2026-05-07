@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { addDays, format, parseISO, subDays } from 'date-fns';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, upsertDay, getDefaultSymptoms, getSymptomById } from '../db';
 import DateHeader from '../components/DateHeader';
 import PeriodButton from '../components/PeriodButton';
 import FlowChips from '../components/FlowChips';
+import SpottingToggle from '../components/SpottingToggle';
 import SymptomTile from '../components/SymptomTile';
 import NoteField from '../components/NoteField';
 import type { FlowLevel, Severity, SymptomId } from '../types';
@@ -44,13 +46,30 @@ export default function Today() {
 
   function handlePeriodToggle() {
     const newOnPeriod = !onPeriod;
+    let newFlow = entry?.flow;
+    if (newOnPeriod) {
+      if (!newFlow || newFlow === 'none') newFlow = 'medium';
+    } else {
+      if (newFlow !== 'spotting') newFlow = undefined;
+    }
     upsertDay({
       date: viewedDate,
       onPeriod: newOnPeriod,
-      flow: newOnPeriod ? 'medium' : undefined,
+      flow: newFlow,
       symptoms: entry?.symptoms ?? [],
       note: entry?.note,
     }).catch((e) => console.error('Failed to persist period toggle', e));
+  }
+
+  function handleSpottingToggle() {
+    const isSpotting = entry?.flow === 'spotting';
+    upsertDay({
+      date: viewedDate,
+      onPeriod: false,
+      flow: isSpotting ? undefined : 'spotting',
+      symptoms: entry?.symptoms ?? [],
+      note: entry?.note,
+    }).catch((e) => console.error('Failed to persist spotting toggle', e));
   }
 
   function handleFlowSelect(newFlow: FlowLevel) {
@@ -113,18 +132,27 @@ export default function Today() {
             <PeriodButton onPeriod={onPeriod} onToggle={handlePeriodToggle} />
           </div>
 
-          <div
-            className={`transition-all duration-200 overflow-hidden ${
-              onPeriod
-                ? 'opacity-100 max-h-40'
-                : 'opacity-0 max-h-0 pointer-events-none'
-            }`}
-          >
-            <FlowChips flow={flow} onSelect={handleFlowSelect} />
+          <div className="transition-all duration-200 overflow-hidden mt-2">
+            {onPeriod ? (
+              <FlowChips flow={flow} onSelect={handleFlowSelect} />
+            ) : (
+              <SpottingToggle
+                isSpotting={entry?.flow === 'spotting'}
+                onToggle={handleSpottingToggle}
+              />
+            )}
           </div>
 
           <div className="mt-8">
-            <p className="text-ink/70 font-semibold text-sm mb-3">How are you feeling?</p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-ink/70 font-semibold text-sm">How are you feeling?</p>
+              <Link
+                to="/settings"
+                className="text-coralDark text-sm font-semibold active:scale-95 transition-all flex items-center gap-1"
+              >
+                Customize ›
+              </Link>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               {[
                 ...getDefaultSymptoms(),
