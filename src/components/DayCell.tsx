@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, isToday } from 'date-fns'
 import type { DayEntry } from '../types'
 
 interface DayCellProps {
@@ -25,13 +25,17 @@ export default function DayCell({ date, dayRecord, isCurrentMonth, onClick }: Da
 
   if (!isCurrentMonth) {
     return (
-      <div className="relative aspect-square flex items-center justify-center" onClick={onClick}>
+      <div
+        className="relative aspect-square flex items-center justify-center active:scale-95 transition-transform"
+        onClick={onClick}
+      >
         <span className="text-sm font-medium text-ink/30">{dayNum}</span>
       </div>
     )
   }
 
   const { bg, text } = flowCircleClasses(dayRecord)
+  const today = isToday(date)
   const onPeriod = dayRecord?.onPeriod ?? false
   const flow = dayRecord?.flow
   const hasSymptoms = (dayRecord?.symptoms?.length ?? 0) > 0
@@ -41,8 +45,13 @@ export default function DayCell({ date, dayRecord, isCurrentMonth, onClick }: Da
   const showSpottingOutline = !onPeriod && flow === 'spotting'
 
   return (
-    <div className="relative aspect-square flex items-center justify-center" onClick={onClick}>
-      <div className={`w-8 h-8 flex items-center justify-center rounded-full ${bg}`}>
+    <div
+      className="relative aspect-square flex items-center justify-center active:scale-95 transition-transform"
+      onClick={onClick}
+    >
+      <div
+        className={`w-8 h-8 flex items-center justify-center rounded-full ${bg} ${today ? 'ring-2 ring-ink' : ''}`}
+      >
         <span className={`text-sm font-medium ${text}`}>{dayNum}</span>
       </div>
 
