@@ -76,19 +76,7 @@ export default function Calendar() {
             isCurrentMonth={isSameMonth(day, currentMonth)}
           />
         ))}
-        {gridDays.map(day => {
-          const inMonth = isSameMonth(day, currentMonth)
-          return (
-            <div
-              key={day.toISOString()}
-              className="aspect-square flex items-center justify-center"
-            >
-              <span className={`text-sm font-medium ${inMonth ? 'text-ink' : 'text-ink/30'}`}>
-                {format(day, 'd')}
-              </span>
-            </div>
-          )
-        })}
+
       </div>
     </div>
   )
