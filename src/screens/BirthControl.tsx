@@ -48,7 +48,7 @@ export default function BirthControl() {
           </button>
 
           {entries.length === 0 ? (
-            <p className="text-center text-ink/40 text-sm mt-6">No birth control logged yet.</p>
+            <p className="text-center text-ink/60 text-sm mt-6">No birth control logged yet.</p>
           ) : (
             <div className="flex flex-col gap-3">
               {entries.map((entry) => (

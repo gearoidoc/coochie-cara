@@ -49,6 +49,6 @@ export interface BirthControlEntry {
 }
 
 export interface MetaEntry {
-  id: 'lastBackup';
+  id: 'lastBackup' | 'bannerSuppressedUntil';
   date: string; // ISO timestamp
 }
