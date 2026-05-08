@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
 import { detectCycles, computeCycleStats } from '../lib/predictions';
 import SummaryStatsCard from '../components/SummaryStatsCard';
+import CycleLengthChart from '../components/CycleLengthChart';
 
 export default function Insights() {
   const allRecords = useLiveQuery(() => db.days.toArray());
@@ -23,6 +24,8 @@ export default function Insights() {
     <div className="p-6">
       <h1 className="text-3xl font-bold text-ink mb-6">Insights</h1>
       <SummaryStatsCard stats={stats} cycles={cycles} />
+      <div className="mb-4" />
+      <CycleLengthChart cycles={stats.usableCycles} medianCycleLength={stats.medianCycleLength} />
     </div>
   );
 }
