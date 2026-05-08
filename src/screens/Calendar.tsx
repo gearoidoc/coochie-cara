@@ -13,7 +13,9 @@ import {
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 import type { DayEntry } from '../types'
-import DayCell from '../components/DayCell'
+import DayCell, { type PredictionInfo } from '../components/DayCell'
+import CalendarLegend from '../components/CalendarLegend'
+import { predictNextPeriod } from '../lib/predictions'
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -34,6 +36,8 @@ export default function Calendar() {
     []
   )
 
+  const allRecords = useLiveQuery(() => db.days.toArray())
+
   const dayMap = useMemo(() => {
     const map = new Map<string, DayEntry>()
     for (const entry of dayEntries ?? []) {
@@ -41,6 +45,18 @@ export default function Calendar() {
     }
     return map
   }, [dayEntries])
+
+  const predictionMap = useMemo(() => {
+    if (allRecords === undefined) return null
+    const prediction = predictNextPeriod(allRecords)
+    if (prediction.nextPeriodStart === null || prediction.predictedPeriodLength === null) return null
+    const map = new Map<string, PredictionInfo>()
+    for (let i = 0; i < prediction.predictedPeriodLength; i++) {
+      const key = format(addDays(new Date(prediction.nextPeriodStart), i), 'yyyy-MM-dd')
+      map.set(key, { isPredictedPeriod: true })
+    }
+    return map
+  }, [allRecords])
 
   function navigateMonth(newMonth: Date) {
     setFadeIn(false)
@@ -98,14 +114,21 @@ export default function Calendar() {
       <div
         className={`grid grid-cols-7 gap-y-1 transition-opacity duration-150 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}
       >
-        {gridDays.map(day => (
-          <DayCell
-            key={day.toISOString()}
-            date={day}
-            dayRecord={dayMap.get(format(day, 'yyyy-MM-dd'))}
-            isCurrentMonth={isSameMonth(day, currentMonth)}
-          />
-        ))}
+        {gridDays.map(day => {
+          const dateKey = format(day, 'yyyy-MM-dd')
+          return (
+            <DayCell
+              key={day.toISOString()}
+              date={day}
+              dayRecord={dayMap.get(dateKey)}
+              isCurrentMonth={isSameMonth(day, currentMonth)}
+              prediction={predictionMap?.get(dateKey)}
+            />
+          )
+        })}
+      </div>
+      <div className="mt-6">
+        <CalendarLegend />
       </div>
     </div>
 
