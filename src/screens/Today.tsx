@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { addDays, format, parseISO, subDays } from 'date-fns';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, upsertDay, getDefaultSymptoms, getSymptomById } from '../db';
+import { deriveCycleStatus } from '../lib/predictions';
 import DateHeader from '../components/DateHeader';
 import PeriodButton from '../components/PeriodButton';
 import FlowChips from '../components/FlowChips';
 import SpottingToggle from '../components/SpottingToggle';
 import SymptomTile from '../components/SymptomTile';
 import NoteField from '../components/NoteField';
+import PredictionStatus from '../components/PredictionStatus';
 import type { FlowLevel, Severity, SymptomId } from '../types';
 
 export default function Today() {
@@ -17,6 +19,14 @@ export default function Today() {
 
   const entry = useLiveQuery(() => db.days.get(viewedDate), [viewedDate], null);
   const symptomConfig = useLiveQuery(() => db.symptomConfig.get('singleton'));
+  // All records for prediction math — independent of viewedDate.
+  const allRecords = useLiveQuery(() => db.days.orderBy('date').toArray());
+
+  // Status always reflects real today, never the URL-driven viewedDate.
+  const realToday = format(new Date(), 'yyyy-MM-dd');
+  const cycleStatus = allRecords !== undefined
+    ? deriveCycleStatus(allRecords, realToday)
+    : null;
 
   // null = DB query in flight; show header but hide form to avoid flicker
   const isLoading = entry === null;
@@ -125,6 +135,12 @@ export default function Today() {
         onNext={handleNext}
         onToday={handleToday}
       />
+
+      {cycleStatus !== null && (
+        <div className="mt-6">
+          <PredictionStatus status={cycleStatus} />
+        </div>
+      )}
 
       {!isLoading && (
         <>
