@@ -11,6 +11,7 @@ import SpottingToggle from '../components/SpottingToggle';
 import SymptomTile from '../components/SymptomTile';
 import NoteField from '../components/NoteField';
 import PredictionStatus from '../components/PredictionStatus';
+import BackupBanner from '../components/BackupBanner';
 import type { FlowLevel, Severity, SymptomId } from '../types';
 
 export default function Today() {
@@ -145,11 +146,10 @@ export default function Today() {
         onToday={handleToday}
       />
 
-      {cycleStatus !== null && (
-        <div className="mt-6">
-          <PredictionStatus status={cycleStatus} />
-        </div>
-      )}
+      <div className="mt-6">
+        <BackupBanner />
+        {cycleStatus !== null && <PredictionStatus status={cycleStatus} />}
+      </div>
 
       {!isLoading && (
         <>

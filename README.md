@@ -10,11 +10,12 @@ A private, local-first PWA period tracker. Built for personal use by me and my p
 - Cycle predictions based on your own logged history (not a population average)
 - Insights screen with median cycle/period length, regularity, and bar charts of cycle and period length over time
 - Birth control log (date-ranged entries — pill, implant, hormonal IUD, copper IUD)
+- Manual backup and restore via JSON file (recommended monthly given iOS storage limitations)
 
 ## What it deliberately doesn't do
 
 - **No backend.** All data lives in your browser's IndexedDB. Nothing syncs anywhere.
-- **No accounts, no login, no cloud.** If you clear browser storage, your data is gone. Export is on the roadmap.
+- **No accounts, no login, no cloud.** All data lives in your browser's IndexedDB. Use the built-in backup feature (Settings → Back up my data) to save a local JSON file — recommended monthly, especially on Safari where clearing site data erases everything.
 - **No fertile window or ovulation predictions.** Estimating ovulation from cycle history alone is unreliable enough that surfacing it would be misleading. The app sticks to what it can actually predict from data: when your next period is likely to start, and how long it's likely to last.
 - **No phase labels** (follicular, luteal, etc.). Same reason — naming phases requires the same ovulation math we opted out of.
 - **No notifications, reminders, or daily check-in prompts.** Open the app when you want to log something.
@@ -50,7 +51,7 @@ Hosted on GitHub Pages, deployed via GitHub Actions on push to `main`.
 - Phase 3: calendar view ✅
 - Phase 4: predictions ✅
 - Phase 5: insights ✅
-- Phase 6: export and polish — planned
+- Phase 6: backup + polish ✅
 
 ## Running locally
 
