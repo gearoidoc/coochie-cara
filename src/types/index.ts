@@ -47,3 +47,8 @@ export interface BirthControlEntry {
   notes?: string;
   updatedAt: number;
 }
+
+export interface MetaEntry {
+  id: 'lastBackup';
+  date: string; // ISO timestamp
+}

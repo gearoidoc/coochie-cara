@@ -129,6 +129,15 @@ export default function Today() {
 
   return (
     <div className="p-6">
+      <div className="flex justify-end mb-2">
+        <Link
+          to="/settings"
+          className="text-2xl text-ink/60 active:scale-95 transition-all"
+          aria-label="Settings"
+        >
+          ⚙
+        </Link>
+      </div>
       <DateHeader
         viewedDate={viewedDate}
         onPrev={handlePrev}
